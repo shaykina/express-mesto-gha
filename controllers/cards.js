@@ -13,11 +13,20 @@ module.exports.getCards = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then(card => res.send({
-      message: "Пост удалён"
+    .then((card) => res.send({
+      createdAt: card.createdAt,
+      likes: card.likes,
+      link: card.link,
+      name: card.name,
+      owner: card.owner,
+      _id: card._id
     }))
     .catch((err) => {
       if (err.name === 'CastError') {
+        res.status(ERROR_CODE_400).send({ message: 'Переданы некорректные данные при удалении карточки' });
+        return;
+      }
+      if (err.name === 'TypeError') {
         res.status(ERROR_CODE_404).send({ message: 'Карточка с указанным _id не найдена' });
         return;
       }
@@ -59,11 +68,11 @@ module.exports.putLike = (req, res) => {
       _id: card._id
     }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(ERROR_CODE_400).send({ message: 'Переданы некорректные данные для постановки лайка' });
         return;
       }
-      if (err.name === 'CastError') {
+      if (err.name === 'TypeError') {
         res.status(ERROR_CODE_404).send({ message: 'Передан несуществующий _id карточки' });
         return;
       }
@@ -85,11 +94,11 @@ module.exports.deleteLike = (req, res) => {
       _id: card._id
     }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(ERROR_CODE_400).send({ message: 'Переданы некорректные данные для снятия лайка' });
         return;
       }
-      if (err.name === 'CastError') {
+      if (err.name === 'TypeError') {
         res.status(ERROR_CODE_404).send({ message: 'Передан несуществующий _id карточки' });
         return;
       }

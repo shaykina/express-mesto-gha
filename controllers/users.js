@@ -21,6 +21,10 @@ module.exports.getUserById = (req, res) => {
     }))
     .catch((err) => {
       if (err.name === 'CastError') {
+        res.status(ERROR_CODE_400).send({ message: 'Указан несуществующий _id пользователя' });
+        return;
+      }
+      if (err.name === 'TypeError') {
         res.status(ERROR_CODE_404).send({ message: 'Пользователь по указанному _id не найден' });
         return;
       }
@@ -52,7 +56,10 @@ module.exports.changeProfile = (req, res) => {
       name: req.body.name,
       about: req.body.about
     },
-    { new: true })
+    {
+      new: true,
+      runValidators: true
+    })
     .then(user => res.send({
       name: user.name,
       about: user.about,
@@ -60,11 +67,11 @@ module.exports.changeProfile = (req, res) => {
       _id: user._id
     }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(ERROR_CODE_400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
         return;
       }
-      if (err.name === 'CastError') {
+      if (err.name === 'TypeError') {
         res.status(ERROR_CODE_404).send({ message: 'Пользователь с указанным _id не найден' });
         return;
       }
@@ -77,7 +84,10 @@ module.exports.changeAvatar = (req, res) => {
     {
       avatar: req.body.avatar
     },
-    { new: true })
+    {
+      new: true,
+      runValidators: true
+     })
     .then(user => res.send({
       name: user.name,
       about: user.about,
@@ -85,11 +95,11 @@ module.exports.changeAvatar = (req, res) => {
       _id: user._id
     }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(ERROR_CODE_400).send({ message: 'Переданы некорректные данные при обновлении аватара' });
         return;
       }
-      if (err.name === 'CastError') {
+      if (err.name === 'TypeError') {
         res.status(ERROR_CODE_404).send({ message: 'Пользователь с указанным _id не найден' });
         return;
       }
