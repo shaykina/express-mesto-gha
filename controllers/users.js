@@ -20,7 +20,7 @@ module.exports.getUserById = (req, res) => {
       _id: user._id
     }))
     .catch((err) => {
-      if (err.name === 'Not Found') {
+      if (err.name === 'CastError') {
         res.status(ERROR_CODE_404).send({ message: 'Пользователь по указанному _id не найден' });
         return;
       }
@@ -38,7 +38,7 @@ module.exports.createUser = (req, res) => {
       _id: user._id
     }))
     .catch((err) => {
-      if (err.name === 'Bad Request') {
+      if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_400).send({ message: 'Переданы некорректные данные при создании пользователя' });
         return;
       }
@@ -60,11 +60,11 @@ module.exports.changeProfile = (req, res) => {
       _id: user._id
     }))
     .catch((err) => {
-      if (err.name === 'Bad Request') {
+      if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
         return;
       }
-      if (err.name === 'Not Found') {
+      if (err.name === 'CastError') {
         res.status(ERROR_CODE_404).send({ message: 'Пользователь с указанным _id не найден' });
         return;
       }
@@ -85,11 +85,11 @@ module.exports.changeAvatar = (req, res) => {
       _id: user._id
     }))
     .catch((err) => {
-      if (err.name === 'Bad Request') {
+      if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_400).send({ message: 'Переданы некорректные данные при обновлении аватара' });
         return;
       }
-      if (err.name === 'Not Found') {
+      if (err.name === 'CastError') {
         res.status(ERROR_CODE_404).send({ message: 'Пользователь с указанным _id не найден' });
         return;
       }

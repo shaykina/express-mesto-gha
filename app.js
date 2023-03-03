@@ -20,7 +20,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/users', routerUsers);
+app.use('/', routerUsers);
 app.use('/cards', routerCards);
 
 app.listen(PORT, () => {
