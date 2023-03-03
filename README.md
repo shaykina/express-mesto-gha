@@ -10,7 +10,7 @@
   
 Остальные директории вспомогательные, создаются при необходимости разработчиком
 
-## [Ссылка на репозиторий](https://shaykina.github.io/mesto/)
+## [Ссылка на репозиторий](https://github.com/shaykina/express-mesto-gha)
 
 `npm run start` — запускает сервер   
 `npm run dev` — запускает сервер с hot-reload
