@@ -158,8 +158,11 @@ module.exports.login = (req, res, next) => {
         token: jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' }),
       });
     })
-    .catch(() => {
-      next(new UnauthorizedError('Ошибка при авторизации'));
+    .catch((err) => {
+      if (!email || !password) {
+        next(new BadRequestError('Введите email и password'));
+      }
+      next(err);
     });
 
   };
