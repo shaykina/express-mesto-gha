@@ -11,7 +11,7 @@ const NotFoundError = require('./errors/NotFoundError');
 require('dotenv').config();
 const { validateURL } = require('./utils/validateURL');
 
-const PORT = 3001;
+const PORT = 3000;
 const app = express();
 
 app.use(bodyParser.json());
