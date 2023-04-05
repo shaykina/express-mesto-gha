@@ -159,8 +159,12 @@ module.exports.login = (req, res, next) => {
       });
     })
     .catch((err) => {
+      console.log(err.name);
       if (!email || !password) {
         next(new BadRequestError('Введите email и password'));
+      }
+      if (err.name === 'TypeError' || err.name === 'ValidationError') {
+        next(new BadRequestError('Введены некорректные данные'));
       }
       next(err);
     });
