@@ -3,8 +3,8 @@ const validator = require('validator');
 require('mongoose-type-url');
 const bcrypt = require('bcryptjs');
 const isEmail = require('validator/lib/isEmail');
+const isURL = require('validator/lib/isURL');
 const UnauthorizedError = require('../errors/UnauthorizedError');
-const BadRequestError = require('../errors/BadRequestError');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -25,13 +25,15 @@ const userSchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.Url,
     required: false,
     default: 'https://practicum.yandex.ru/trainer/web/lesson/232f6a79-0075-4280-9689-f198e0b66744/#:~:text=avatar%20%E2%80%94-,%D1%81%D1%81%D1%8B%D0%BB%D0%BA%D0%B0,-%3B',
-    validate: [validator.isURL, 'invalid link'],
+    validate: {
+      validator: (v) => isURL(v),
+      message: 'Некорректный формат ссылки',
+    },
   },
   email: {
     type: String,
     unique: true,
     required: true,
-    //validate: [validator.isEmail, 'invalid email'],
     validate: {
       validator: (v) => isEmail(v),
       message: 'Некорректный формат почты',
