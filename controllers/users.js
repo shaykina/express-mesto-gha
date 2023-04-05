@@ -150,7 +150,7 @@ module.exports.changeAvatar = (req, res, next) => {
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -158,7 +158,7 @@ module.exports.login = (req, res) => {
         token: jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' }),
       });
     })
-    .catch((err) => {
+    .catch(() => {
       next(new UnauthorizedError('Ошибка при авторизации'));
     });
 
