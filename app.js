@@ -11,7 +11,7 @@ const NotFoundError = require('./errors/NotFoundError');
 require('dotenv').config();
 const { validateURL } = require('./utils/validateURL');
 
-const PORT = 3000;
+const PORT = 3001;
 const app = express();
 
 app.use(bodyParser.json());
@@ -45,7 +45,7 @@ app.use('/', (req, res, next) => {
 
 app.use(errors());
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res
     .status(statusCode)
@@ -54,6 +54,7 @@ app.use((err, req, res) => {
         ? 'На сервере произошла ошибка'
         : message,
     });
+  next();
 });
 
 app.listen(PORT, () => {
