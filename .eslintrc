@@ -1,5 +1,6 @@
 {
   "extends": "airbnb-base",
+  "import/no-extraneous-dependencies": ["error", {"devDependencies": false, "optionalDependencies": false, "peerDependencies": false}],
   "rules": {
     "no-underscore-dangle": [
       "error",
@@ -10,4 +11,5 @@
       }
     ]
   }
+
 }
