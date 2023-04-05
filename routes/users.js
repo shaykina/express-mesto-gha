@@ -3,12 +3,17 @@ const { celebrate, Joi } = require('celebrate');
 const {
   getUsers, getUserById, getCurrentUser, changeProfile, changeAvatar,
 } = require('../controllers/users');
+const { validateURL } = require('../utils/validateURL');
 
 router.get('/', getUsers);
 
 router.get('/me', getCurrentUser);
 
-router.get('/:userId', getUserById);
+router.get('/:userId', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().length(24).hex().required(),
+  }),
+}), getUserById);
 
 router.patch('/me', celebrate({
   body: Joi.object().keys({
@@ -19,7 +24,7 @@ router.patch('/me', celebrate({
 
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().custom(validateURL),
   }),
 }), changeAvatar);
 

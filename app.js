@@ -1,16 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
+const { celebrate, Joi } = require('celebrate');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
-const BadRequestError = require('./errors/BadRequestError');
+const NotFoundError = require('./errors/NotFoundError');
 require('dotenv').config();
-const { celebrate, Joi } = require('celebrate');
-const { errors } = require('celebrate');
+const { validateURL } = require('./utils/validateURL');
 
-const PORT = 3000;
+const PORT = 3001;
 const app = express();
 
 app.use(bodyParser.json());
@@ -28,30 +29,30 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().custom(validateURL),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
-}),createUser);
+}), createUser);
 
 app.use(auth);
 
 app.use('/users', routerUsers);
 app.use('/cards', routerCards);
 app.use('/', (req, res, next) => {
-  next(new BadRequestError('Указанный путь не найден'));
+  next(new NotFoundError('Указанный путь не найден'));
 });
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   const { statusCode = 500, message } = err;
   res
     .status(statusCode)
     .send({
       message: statusCode === 500
         ? 'На сервере произошла ошибка'
-        : message
+        : message,
     });
 });
 
