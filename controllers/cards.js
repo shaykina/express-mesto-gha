@@ -12,12 +12,12 @@ module.exports.getCards = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
+    .orFail(() => {
+      throw new NotFoundError('Карточка с указанным _id не найдена');
+    })
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Нет права доступа');
-      }
-      if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена');
       }
       Card.findByIdAndRemove(req.params.cardId)
         .then((item) => res.send(item))

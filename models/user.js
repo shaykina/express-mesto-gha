@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: mongoose.SchemaTypes.Url,
     required: false,
-    default: 'https://practicum.yandex.ru/trainer/web/lesson/232f6a79-0075-4280-9689-f198e0b66744/#:~:text=avatar%20%E2%80%94-,%D1%81%D1%81%D1%8B%D0%BB%D0%BA%D0%B0,-%3B',
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator: (v) => isURL(v),
       message: 'Некорректный формат ссылки',
